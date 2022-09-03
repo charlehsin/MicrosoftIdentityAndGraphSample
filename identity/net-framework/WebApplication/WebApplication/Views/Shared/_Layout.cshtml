@@ -8,6 +8,52 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // We use the query parameter to see if we are signed in to Azure.
+            // If we are signed in, there will be a upn query paramter.
+            // This detection is just purely for GUI user experience purpose and should not be used in security-related purpose.
+            const queryString = window.location.search;
+            const parameters = new URLSearchParams(queryString);
+            const value = parameters.get('upn');
+            const savedUrl = sessionStorage.getItem('savedUrl');
+            if (value && savedUrl && savedUrl !== '') {
+                alert(`The user is just signed in with upn ${value} and savedUrl ${savedUrl}.`);
+                // Reset
+                sessionStorage.setItem('savedUrl', '');
+                // Go back to the original URL
+                window.location.href = savedUrl;
+            } else {
+                // Reset
+                sessionStorage.setItem('savedUrl', '');
+            }
+        });
+
+        function startAzureLogin() {
+            // Save the current URL so that we can go back after we sign in.
+            sessionStorage.setItem('savedUrl', window.location.href);
+
+            // Send POST request to our backend AzureLogin API controller to start the log in flow.
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState != 4) return;
+
+                if (this.status == 200) {
+                    // Get the Microsoft Identity URL to for the auth code request.
+                    var data = JSON.parse(this.responseText);
+                    // Go to Microsoft Identity to sign in.
+                    // After sign-in, Microsoft Identity platform will redirect to the target URI, which is our AzureLoing API.
+                    window.location.href = data;
+                }
+            };
+            xhr.open('POST', 'https://localhost:44340/api/AzureLogin', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(null);
+        }
+
+    </script>
+
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -23,6 +69,7 @@
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    <li><a onclick="startAzureLogin()" href="#">Azure Login</a></li>
                 </ul>
             </div>
         </div>

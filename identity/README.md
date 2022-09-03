@@ -27,6 +27,7 @@
     - [Find your app's OpenID configuration document URI](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-protocols-oidc#find-your-apps-openid-configuration-document-uri)
     - [How to validate Azure AD security token?](https://stackoverflow.com/questions/39866513/how-to-validate-azure-ad-security-token)
     - [Map Identity Provider (IdP) settings - Identity issuer value](https://docs.microsoft.com/en-us/azure/active-directory/manage-apps/migrate-adfs-apps-to-azure#map-identity-provider-idp-settings)
+    - [Microsoft Graph API App id for valid audience](https://docs.microsoft.com/en-us/troubleshoot/azure/active-directory/verify-first-party-apps-sign-in#application-ids-for-commonly-used-microsoft-applications)
   - Nonce issue
     - [Nonce issue when validating the access token](https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/issues/609#issuecomment-405683736)
     - [Unable to successfully validate an access token from Microsoft Graph API](https://stackoverflow.com/questions/63941878/unable-to-successfully-validate-an-access-token-from-microsoft-graph-api)
