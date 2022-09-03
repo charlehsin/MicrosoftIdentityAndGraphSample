@@ -7,17 +7,19 @@
   - [Authorization Code Flow](https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow)
   - [Microsoft identity platform and OAuth 2.0 authorization code flow](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow)
 - Various application scenarios
+  - [Public client and confidential client applications](https://docs.microsoft.com/en-us/azure/active-directory/develop/msal-client-applications)
+  - [RFC 6749 - Client Authentication](https://datatracker.ietf.org/doc/html/rfc6749#section-2.3)
   - [Application types for the Microsoft identity platform](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-app-types)
   - [Authentication flows and application scenarios](https://docs.microsoft.com/en-us/azure/active-directory/develop/authentication-flows-app-scenarios)
+  - Notes: To get access token, "client_secrete" is required if this is Web app or Web API, which is considered as confidential app running at server backend. "client_secrete" is not required if this is SPA or desktop app, which is considered as public app without the capability to store app secrete securely.
 - Available libraries
-  - [Microsoft libraries available for web app](https://docs.microsoft.com/en-us/azure/active-directory/develop/reference-v2-libraries#web-application)
-    - For .NET Framework, there is no library available for sign-in user. Therefore, need to use the low-level protocol.
+  - [Microsoft identity platform authentication libraries](https://docs.microsoft.com/en-us/azure/active-directory/develop/reference-v2-libraries)
 - Redirect GUI
   - [Redirect URI (reply URL) restrictions and limitations](https://docs.microsoft.com/en-us/azure/active-directory/develop/reply-url)
 - code_verifier and code_challenge
   - [RFC 7636 section 4.1](https://datatracker.ietf.org/doc/html/rfc7636#section-4.1)
-  - [IdentityServer4 PKCE error: "Transformed code verifier does not match code challenge"](https://stackoverflow.com/questions/58687154/identityserver4-pkce-error-transformed-code-verifier-does-not-match-code-chall)
-  - [https://developers.tapkey.io/api/authentication/pkce/](https://developers.tapkey.io/api/authentication/pkce/)
+  - [How to calculate PCKE's code_verifier?](https://stackoverflow.com/questions/59911194/how-to-calculate-pckes-code-verifier)
+  - [Auth0 - Create code verifier](https://auth0.com/docs/get-started/authentication-and-authorization-flow/call-your-api-using-the-authorization-code-flow-with-pkce#create-code-verifier)
 - Access token
   - [Microsoft identity platform access tokens](https://docs.microsoft.com/en-us/azure/active-directory/develop/access-tokens)
   - [Provide optional claims to your app](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-optional-claims)

@@ -1,6 +1,8 @@
 # .NET Framework samples for Microsoft Identity Platform and Microsoft Authentication Library, using Authorization Code Flow
 
-This is a .NET Framework Web MVC + Web API application based on the Visual Studio default sample codes. This app is developed using Visual Studio 2022. This is targeting a special scenario where our frontend codes call our backend Web API to do the sign-in via Microsoft Identity Platform. The main sign-in codes will be at the backend API controller. The action flow in order is:
+This is a ASP.NET Framework app based on the Visual Studio sample codes for MVC + Web API. Although we are using the default sample as the base, we are simulating a special scenario where our front-end is a SPA and our back-end is a Web API.
+
+In our scenario, our frontend codes call our backend Web API to do the sign-in via Microsoft Identity Platform. Then the backend Web API will handle the access token obtained from the Microsoft Identity Platform and does not return it to the frontend. The main sign-in codes will be at the backend API controller. The action flow in order is:
 
 1. The user clicks the Azure Login link at the frontend web page.
 1. The frontend records the current URL in session storage so that it can get back to this URL after sign-in.
@@ -18,7 +20,11 @@ This is a .NET Framework Web MVC + Web API application based on the Visual Studi
    - If it can get it and there is non-empty saved url in session storage, we are just signed-in. Set the saved url value in session storage to empty, and go to the saved URL.
    - Else, set the saved url value in session storage to empty.
 
-Our codes are at
+Our special scenario is different from a pure [web app](https://docs.microsoft.com/en-us/azure/active-directory/develop/index-web-app). A pure web app serves the dynamic content based on the server-side code, and is not a SPA. Therefore, the whole flow can be conveniently handled by MSAL library at backend. In our special scenario, our frontend web site is a SPA, so our backend has to return the authorization-code request URL to the frontend to let user interactively sign in.
+
+Our special scenario is different from a pure [SPA](https://docs.microsoft.com/en-us/azure/active-directory/develop/index-spa) (or a pure [desktop app](https://docs.microsoft.com/en-us/azure/active-directory/develop/tutorial-v2-windows-desktop)). A pure SPA sends the request to Microsoft Identity Platform directly and gets the access token back. In our special scenario, our frontend does not need to use/get the access token from the Microsoft, and our backend will get the access token from the Microsoft and handle it.
+
+This app is developed using Visual Studio 2022. Our codes are at
 
 - [_Layout.cshtm](./WebApplication/WebApplication/Views/Shared/_Layout.cshtml): Check the JavaScript codes.
 - [AzureLoginController.cs](./WebApplication/WebApplication/Controllers/AzureLoginController.cs)

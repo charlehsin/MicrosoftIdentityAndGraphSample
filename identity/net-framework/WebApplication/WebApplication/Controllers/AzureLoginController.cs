@@ -198,8 +198,10 @@ namespace WebApplication.Controllers
         private static string GetCodeVerifier()
         {
             // https://datatracker.ietf.org/doc/html/rfc7636#section-4.1
+            // https://stackoverflow.com/questions/59911194/how-to-calculate-pckes-code-verifier
             // Base64 string characters include + and / and =
             // code_verifier spec does not allow them, but allow - and . and _ and ~
+            // Do Base64 URL encoding
             const int verifierSize = 32;
             using (var rng = RandomNumberGenerator.Create())
             {
@@ -215,8 +217,10 @@ namespace WebApplication.Controllers
         private static string GetCodeChallenge(string codeVerifier)
         {
             // https://datatracker.ietf.org/doc/html/rfc7636#section-4.1
+            // https://stackoverflow.com/questions/59911194/how-to-calculate-pckes-code-verifier
             // Base64 string characters include + and / and =
             // code_challenge spec does not allow them, but allow - and . and _ and ~
+            // Do Base64 URL encoding
             using (var sha256 = SHA256.Create())
             {
                 var challengeBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(codeVerifier));
