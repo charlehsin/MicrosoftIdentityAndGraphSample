@@ -22,11 +22,15 @@ namespace WebApplication.Controllers
     {
         [JsonProperty("code")]
         public string Code { get; set; }
+
+        [JsonProperty("state")]
+        public string State { get; set; }
     }
 
     public class AzureLoginController : ApiController
     {
         private static readonly string AzureLoginCodeVerifier = GetCodeVerifier();
+        private static readonly string AzureLoginState = Guid.NewGuid().ToString();
 
         private readonly string _tenantId;
         private readonly string _clientId;
@@ -34,6 +38,7 @@ namespace WebApplication.Controllers
         private readonly string _redirectUri;
         private readonly string _codeVerifier;
         private readonly string _codeChallenge;
+        private readonly string _state;
 
         public AzureLoginController()
         {
@@ -48,6 +53,11 @@ namespace WebApplication.Controllers
             System.Diagnostics.Debug.WriteLine($"_codeVerifier: {_codeVerifier}");
             _codeChallenge = GetCodeChallenge(_codeVerifier);
             System.Diagnostics.Debug.WriteLine($"_codeChallenge: {_codeChallenge}");
+
+            // Need to keep the state the same for the same sign-in flow with both getting auth code and getting access token.
+            // Therefore, we cannot create a random one at API controller. We create it as static variable.
+            _state = AzureLoginState;
+            System.Diagnostics.Debug.WriteLine($"_state: {_state}");
         }
 
         [AllowAnonymous]
@@ -60,6 +70,14 @@ namespace WebApplication.Controllers
                 // We return the auth code request URL back to the front-end to let it do the manually sign-in.
                 // We do not return Redirection because the Microsoft domain is different from our Web app domain, and we don't want to set up CORS.
                 return Ok(GetAuthCodeUrl());
+            }
+
+            if (authCode.State != _state)
+            {
+                System.Diagnostics.Debug.WriteLine($"The state value returned does not match.");
+
+                // You may want to return Redirect instead.
+                return InternalServerError();
             }
 
             // When the Microsoft Identity platform issues the auth code, it will send it to the configured redirect URI, which is this API.
@@ -85,6 +103,8 @@ namespace WebApplication.Controllers
             System.Diagnostics.Debug.WriteLine($"upn obtained: {upn}");
             if (string.IsNullOrWhiteSpace(upn))
             {
+                System.Diagnostics.Debug.WriteLine($"Cannot get UPN value for this user.");
+
                 // You may want to return Redirect instead.
                 return InternalServerError();
             }
@@ -103,7 +123,7 @@ namespace WebApplication.Controllers
                    $"&redirect_uri={HttpUtility.UrlEncode(_redirectUri)}" +
                    "&response_mode=form_post" +
                    $"&scope={HttpUtility.UrlEncode("User.Read")}" +
-                   $"&state={HttpUtility.UrlEncode(Guid.NewGuid().ToString())}" +
+                   $"&state={HttpUtility.UrlEncode(_state)}" +
                    $"&code_challenge={HttpUtility.UrlEncode(_codeChallenge)}" +
                    "&code_challenge_method=S256";
         }
